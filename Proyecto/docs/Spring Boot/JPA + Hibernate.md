@@ -23,9 +23,7 @@ La comunicación entre JPA y la base de datos se realiza a través de anotacione
 ![jpa](/img/jpa.png)
 
 
-¡Me parece una excelente introducción! Has cubierto muy bien los conceptos básicos de ORM, JPA y cómo JPA funciona como una API que necesita un proveedor de implementación, lo que prepara al lector para entender la persistencia de datos en Java.
 
-Algunas sugerencias menores que podrían mejorar aún más la fluidez y claridad:
 
 Introducción a los ORM
 Uno de los aspectos más importantes a la hora de desarrollar aplicaciones web es, sin dudas, la forma en que almacenamos y gestionamos los datos.

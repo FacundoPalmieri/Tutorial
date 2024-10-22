@@ -57,17 +57,17 @@ Ya hemos mencionado que el mapeo de los endpoints se compone de un método HTTP 
 
 *PUT:* Se utiliza para actualizar *completamente* un recurso existente con los datos proporcionados por el cliente. Se mapea con @PutMapping
 
-**PATCH:*  Se utiliza para *actualizaciones parciales* de una entidad. Ejemplo, una baja lógica. Debe identificarse como @PatchMapping.
+*PATCH:*  Se utiliza para *actualizaciones parciales* de una entidad. Ejemplo, una baja lógica. Debe identificarse como @PatchMapping.
 
-**DELETE:* Para eliminar *fisicamente* un recurso en el servidor. Debe identificarse como @DeleteMapping.
+*DELETE:* Para eliminar *fisicamente* un recurso en el servidor. Debe identificarse como @DeleteMapping.
 
 
 ### URL (Mapping)
 La estructura de las URLs en los controladores puede definirse de dos maneras: rutas estáticas y dinámicas. Las rutas dinámicas se denominan así porque la solicitud (request) puede incluir parámetros en la URL que representan valores necesarios para la lógica de la operación.
 
 
-Existen dos maneras principales de manejar estos parámetros:
-<br/><br/>
+#### Existen dos maneras principales de manejar estos parámetros:
+
 
 ### 1. Request Parameters: 
 Se utiliza para recibir información a través de la URL. 
@@ -75,7 +75,7 @@ Se utiliza para recibir información a través de la URL.
 Generalmente se aplica en métodos GET, aunque también puede ser útil en otros métodos HTTP.
 :::
 
-Hay dos maneras comunes de extraer información de las URLs:
+A su vez, dentro del Request Parameters, hay dos formas comunes de extraer información de las URLs:
 
 #### @PathVariable: 
 Se utiliza para extraer valores dinámicos directamente de la estructura de la URL. Los parámetros de @PathVariable forman parte de la ruta.

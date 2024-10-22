@@ -44,7 +44,7 @@ https://github.com/auth0/java-jwt
 ```jsx title="Configuraciones de BD"
 #Configuraciones de BD
 spring.jpa.hibernate.ddl-auto=update
-spring.datasource.url=${BD_URL}
+spring.datasource.url=${BD_URL} // jdbc:mysql://localhost:3306/NombreBD?createDatabaseIfNotExist=true
 spring.datasource.username=${BD_USER}
 spring.datasource.password=${BD_PASSWORD}
 ```

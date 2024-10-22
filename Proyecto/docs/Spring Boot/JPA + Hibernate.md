@@ -2,7 +2,7 @@
 sidebar_position: 12
 ---
 
-#  12 - JPA + Hiberante
+#  12 - JPA + Hibernate
 
 ## Introducción a los ORM
 

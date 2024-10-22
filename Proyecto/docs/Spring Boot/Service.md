@@ -428,3 +428,11 @@ Ahora nos queda resolver la lógica en el service. Para eso deberiamos realizar 
 En resumen, el uso de un DTO nos permite enviar solo los datos necesarios al cliente, optimizando la comunicación entre el servidor y el cliente. Esto también mejora la seguridad al evitar la exposición de atributos innecesarios en nuestros modelos de datos.
 :::
 
+<br/><br/>
+
+## Cierre del Tutorial 🎉
+Hemos llegado al final de este tutorial sobre Spring Boot. En este recorrido, exploramos varios aspectos fundamentales, desde la configuración inicial hasta la implementación de funcionalidades avanzadas. 💻✨
+
+A lo largo del tutorial, hemos abordado conceptos troncales como la creación de controladores, la gestión de servicios, la integración con bases de datos y la validación de datos. También hemos aprendido cómo estructurar nuestro proyecto de manera eficiente, asegurando que sea escalable y fácil de mantener. 📊📦
+
+Ahora a aplicar lo aprendido en nuevos proyectos. 🚀

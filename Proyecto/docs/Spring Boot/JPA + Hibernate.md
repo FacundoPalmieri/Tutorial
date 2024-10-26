@@ -50,26 +50,21 @@ Sin embargo, Hibernate es uno de los proveedores más utilizados debido a su fle
 
 
 
-## Hiberante
+## Hibernate
 El principal objetivo de Hibernate es el de mapear las clases del modelo de datos de una aplicación y así convertirlos o asociarlos a bases de datos, para ello, como se mencionó anteriormente, se utilizan annotations.
 
 Algunas de las más conocidas se explican en detalle a continuación.
 
-**@Entity:** 
+**@Entity:**  Se utiliza para mapear todas las clases que se convertirán en entidades (tablas) en la futura base de datos.
 
-Se utiliza para mapear todas las clases que se convertirán en entidades (tablas) en la futura base de datos.
+**@Table:**  Se utiliza en conjunto con la annotation @Entity. Su principal función es la de mapear con una tabla de una base de datos en particular (en caso de que ya existiese) o establecer el nombre que queremos que la entidad tome como tabla en la base de datos. Su uso es opcional, en caso de que no la utilicemos, JPA tomará automáticamente como nombre de la tabla al nombre de la clase.
 
-**@Table:** 
+**@Id:** Se utiliza para matear las id de cada clase, las cuales se reflejarán en las bases de datos como primary keys (claves primarias).
 
-Se utiliza en conjunto con la annotation @Entity. Su principal función es la de mapear con una tabla de una base de datos en particular (en caso de que ya existiese) o establecer el nombre que queremos que la entidad tome como tabla en la base de datos. Su uso es opcional, en caso de que no la utilicemos, JPA tomará automáticamente como nombre de la tabla al nombre de la clase.
+<br/>
+<br/>
 
-**@Id:**
-
- Se utiliza para matear las id de cada clase, las cuales se reflejarán en las bases de datos como primary keys (claves primarias).
-
-**@GeneratedValue:** 
-
-Se utiliza en conjunto con @Id y permite establecer el tipo de secuencia o generación que va a tener una determinada id. Entre las principales estrategias de generación automática de secuencias que posee GeneratedValue se encuentran:
+**@GeneratedValue:** Se utiliza en conjunto con @Id y permite establecer el tipo de secuencia o generación que va a tener una determinada id. Entre las principales estrategias de generación automática de secuencias que posee GeneratedValue se encuentran:
 
     **-Auto:** Es la opción por defecto. Pensada principalmente para ids numéricas. Esta estrategia deja a criterio de Hibernate la forma de generación que considere mejor para la id con la que se esté trabajando.
 
@@ -79,14 +74,11 @@ Se utiliza en conjunto con @Id y permite establecer el tipo de secuencia o gener
 
     **-Table:** Se utiliza para casos donde es necesario asignar claves primarias para las entidades de una base de datos mediante los datos que se encuentren contenidos en una tabla, guardando en ésta el último valor utilizado como referencia.
 
-**@Column:** 
+<br/>
+<br/>
 
-Se utiliza para mapear cada uno de los atributos de una clase con las columnas de una tabla. No es una annotation obligatoria, en caso de que no se la utilice, JPA toma de forma automática como nombre de columna al nombre del atributo de la clase en cuestión. Es una annotation principalmente pensada para el mapeo de atributos sobre columnas de tablas en bases de datos ya existentes.
+**@Column:**  Se utiliza para mapear cada uno de los atributos de una clase con las columnas de una tabla. No es una annotation obligatoria, en caso de que no se la utilice, JPA toma de forma automática como nombre de columna al nombre del atributo de la clase en cuestión. Es una annotation principalmente pensada para el mapeo de atributos sobre columnas de tablas en bases de datos ya existentes.
 
-**@OneToOne, @OneToMany, @ManyToOne y @ManyToMany:** 
+**@OneToOne, @OneToMany, @ManyToOne y @ManyToMany:**  Son annotations utilizadas principalmente para el mapeo de relaciones entre clases, los cuales se traducirán a nivel de base de datos como relaciones entre tablas (uno a uno, uno a muchos, muchos a uno o muchos a muchos).
 
-Son annotations utilizadas principalmente para el mapeo de relaciones entre clases, los cuales se traducirán a nivel de base de datos como relaciones entre tablas (uno a uno, uno a muchos, muchos a uno o muchos a muchos).
-
-**@JoinColumn:** 
-
-Es utilizada para manifestar los distintos tipos de Join que sean necesarios entre campos de tablas.
+**@JoinColumn:** Es utilizada para manifestar los distintos tipos de Join que sean necesarios entre campos de tablas.

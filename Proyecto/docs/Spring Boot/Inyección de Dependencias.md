@@ -17,7 +17,7 @@ Se entiende entonces que la inyección de dependencias busca desacoplar lo máxi
 
 ![Dependencias2](/img/dependencias2.png)
 
-Como vemos, ServicioNormal y ServicioPremiun dependen fuertemente de ServicioLavado. Esto, a nivel código podríamos verlo reflejado de la siguiente manera: 
+Como vemos, ServicioNormal y ServicioPremium dependen fuertemente de ServicioLavado. Esto, a nivel código podríamos verlo reflejado de la siguiente manera: 
 
 ```jsx title="Ejemplo"
 public class ServicioLavado {

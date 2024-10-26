@@ -11,7 +11,7 @@ Estas solicitudes se envían a un endpoint de la API, el cual está definido por
 Una vez que la capa de servicio procesa la solicitud, devuelve la información al controlador, que a su vez, envía una response (respuesta) al cliente. Esta respuesta puede contener los datos solicitados o un mensaje que el cliente pueda interpretar y mostrar al usuario final.
 
 :::info[Importante]
-Para que Spring boot identifique esta interfaz como tal, debemos colocar la annotation @Controller
+Para que Spring boot identifique esta clase como tal, debemos colocar la annotation @RestController
 :::
 
 ## Configuraciones iniciales
@@ -175,7 +175,7 @@ localhost:8080/curso/modificar
 :::
 
 <br/><br/>
-
+-------------------------------------------------------------------------------------------------------------------------------
 ### Response
 En una API REST, la respuesta (response) es lo que el servidor devuelve al cliente después de procesar una solicitud HTTP. Esta respuesta contiene dos componentes clave:
 

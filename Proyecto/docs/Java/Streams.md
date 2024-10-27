@@ -1,8 +1,8 @@
 ---
-sidebar_position: 6
+sidebar_position: 5
 ---
 
-# 6 - Streams
+# 5 - Streams
 
 Los Streams en Java son una abstracción introducida en Java 8 para procesar secuencias de datos de forma declarativa y funcional. Permiten realizar operaciones complejas de procesamiento de datos, como el filtrado, la transformación y la agregación, de manera sencilla y eficiente. Un Stream representa una secuencia de elementos y proporciona un conjunto de operaciones que pueden ser aplicadas a esta secuencia para producir un resultado.
 

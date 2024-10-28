@@ -1,8 +1,8 @@
 ---
-sidebar_position: 6
+sidebar_position: 7
 ---
 
-# 6 - Preguntas Técnicas.
+# 7 - Preguntas Técnicas.
 
 ## Cual es la diferencia entre JDK y JRE?
 La diferencia principal entre JDK y JRE es:

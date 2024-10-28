@@ -1,8 +1,8 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
-# 4 - Funciones Lambdas
+# 5 - Funciones Lambdas
 Las funciones lambda en Java son una forma de escribir funciones anónimas, es decir, funciones que no tienen un nombre. Se introdujeron en Java 8 como parte de las mejoras para programar de manera más funcional, y permiten simplificar el código, especialmente al trabajar con interfaces funcionales (interfaces que tienen un único método abstracto, como Runnable o Comparator).
 
 El propósito principal de las expresiones lambda es permitir que podamos escribir funciones de manera concisa y flexible. En vez de definir una clase completa para implementar una interfaz, una función lambda puede implementarla en línea. Esto resulta especialmente útil en el contexto de operaciones sobre colecciones y flujos de datos (Streams).

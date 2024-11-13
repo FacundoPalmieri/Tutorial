@@ -220,14 +220,13 @@ public class ExampleTest {
 - **assertInstanceOf(Integer.class, resultado);** --> Evalua que la respuesta sea del tipo de dato que le indico.
 
 
+<br/><br/>
 
 #### Ejemplos con cada uno de ellos
 
  
+**1. assertEquals(esperado, resultado);** --> Evaluar un valor esperado, con un valor actual.
 
-- **assertEquals(esperado, resultado);** --> Evaluar un valor esperado, con un valor actual.
-
-- Tendremos nuestra clase desarrollada, la cual tine un método que revierte una cadena de caracteres y la retorna
 ```jsx title="Clase Example - checkPositivo"
 public class Example{
       public String revertirCadena(String cadena) {
@@ -235,13 +234,10 @@ public class Example{
     }
 }
 ```
+- Tendremos nuestra clase desarrollada, la cual tine un método que revierte una cadena de caracteres y la retorna
 
+<br/><br/>
 
-- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
-
--  En la misma se llama al método revertirCadena y se guarda en la variable result.
-
-- Luego utilizamos el método de comparación que compara el valor esperado vs. real
 
 ```jsx title="Clase Example - checkPositivo"
 public class Example{
@@ -259,12 +255,17 @@ public class Example{
     }
 }
 ```
+- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
+
+-  En la misma se llama al método revertirCadena y se guarda en la variable result.
+
+- Luego utilizamos el método de comparación que compara el valor esperado vs. real
 
 <br/><br/>
 
-- **assertTrue(resultado > x );** --> Siempre espera verdadero
+**2. assertTrue(resultado > x );** --> Siempre espera verdadero
 
-- Tendremos nuestra clase desarrollada, la cual tine un método que valida que un número sea positivo. **En caso contrario Arroja una Exception.**
+
 ```jsx title="Clase Example - checkPositivo"
 public class Example{
       public boolean checkPositivo(int numero) {
@@ -275,12 +276,11 @@ public class Example{
     }
 }
 ```
+- Tendremos nuestra clase desarrollada, la cual tine un método que valida que un número sea positivo. **En caso contrario Arroja una Exception.**
 
-- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
+<br/><br/>
 
--  En la misma se llama al método checkPositivo y se guarda en la variable result.
 
-- Luego utilizamos el método de comparación que valida un true(Porque el método devuelve un Boolean).
 
 ```jsx title="Clase Example - checkPositivo"
 public class Example{
@@ -298,18 +298,17 @@ public class Example{
     }
 }
 ```
+- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
+
+-  En la misma se llama al método checkPositivo y se guarda en la variable result.
+
+- Luego utilizamos el método de comparación que valida un true(Porque el método devuelve un Boolean).
 
 <br/><br/>
 
-- Ahora deberemos verificar el otro flujo del condicional del método testeado. Es decir, al pasarle un valor positivo deberá devolver true, caso contrario arrojar una Exception. Por tal, vamos a testear ese camino.
+Ahora deberemos verificar el otro flujo del condicional del método testeado. Es decir, al pasarle un valor positivo deberá devolver true, caso contrario arrojar una Exception. Por tal, vamos a testear ese camino.
 
-- **assertThrows();** --> Valida excepeciones
-
-- Declaramos una variable con valor NEGATIVO.
-
--  Armamos un nuevo método y llamamos a checkPositivo. Guardamos el valor en una variable result.
-
-- Luego utilizamos el método de comparación que valida Exceptions. 
+**3. assertThrows();** --> Valida excepeciones
 
 ```jsx title="Clase Example - checkPositivoError"
 public class Example{
@@ -326,11 +325,17 @@ public class Example{
     }
 }
 ```
+- Declaramos una variable con valor NEGATIVO.
+
+-  Armamos un nuevo método y llamamos a checkPositivo. Guardamos el valor en una variable result.
+
+- Luego utilizamos el método de comparación que valida Exceptions. 
+
 <br/><br/>
 
-- **assertNotNull(resultado);** --> valida que el objeto resultado NO sea nulo.
+**4. assertNotNull(resultado);** --> valida que el objeto resultado NO sea nulo.
 
-- Tendremos nuestra clase desarrollada, la cual tine un método que cuenta letras 'A'
+
 ```jsx title="Clase Example - ccontarLetrasA(cadena)"
 public class Example{
     public int contarLetrasA(String cadena) {
@@ -340,13 +345,9 @@ public class Example{
     }
 }
 ```
+- Tendremos nuestra clase desarrollada, la cual tine un método que cuenta letras 'A'
 
-
-- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
-
--  En la misma se llama al método contarLetrasA y se guarda en la variable result.
-
-- Luego utilizamos el método para verificar que el valor NO sea Nulo, y que compare la cantidad de letras 'A' esperadas vs. Reales
+<br/><br/>
 
 ```jsx title="Clase Example - contarLetrasA"
 public class Example{
@@ -365,6 +366,12 @@ public class Example{
 
 }
 ```
+
+- Tendremos nuestra clase TEST, que identificamos con la annotation @Test.
+
+-  En la misma se llama al método contarLetrasA y se guarda en la variable result.
+
+- Luego utilizamos el método para verificar que el valor NO sea Nulo, y que compare la cantidad de letras 'A' esperadas vs. Reales
 
 
 

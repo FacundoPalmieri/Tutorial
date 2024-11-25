@@ -302,36 +302,44 @@ En este caso:
 -   El < p > dentro del < section > tendrá un tamaño de fuente de 16px.
 
 ```jsx title="index.html"
-<section>
-    <article>
-        <h2>Título</h2>
-        <p>Lorem ipsum dolor sit amet...</p>
-    </article>
-</section>
-
+<main>
+    <section>
+        <article>
+            <h2>Título</h2>
+            <p>Lorem ipsum dolor sit amet...</p>
+        </article>
+    </section>
+</main>
 ```
 
 ```jsx title="style.css"
 /* Estilo aplicado al elemento padre <section> */
-section {
+main section {
 color: blue;
 font-family: Arial, sans-serif;
 }
 
 /* Estilo específico para el elemento hijo <h2> */
-section h2 {
+main section h2 {
 color: red;
 font-size: 24px;
 }
 
 /* Estilo específico para el elemento hijo <p> */
-section p {
+main section p {
 font-size: 16px;
 }
 
 ```
 
 ![herenciacss](/img/herenciacss.png)
+
+:::tip
+Se recomienda siempre empezar desde la etiqueta padre, posterior al Body. Ejemplo comenzar a recorrer las etiquetas desde el :
+-   Header
+-   Main
+-   footer
+:::
 
 
 ## Selectores y Propiedades
@@ -381,6 +389,11 @@ p {
 <h1 id="titulo">Mi Título</h1>
 
 ```
+:::danger[Importante]
+**No es buena práctica usar ID en CSS. Generalmente se usan:**
+ -  Etiquetas y clases para CSS.
+ -  ID para JavaScript.
+:::
 <br/><br/>
 
 **-   Selector Universal (*):** Aplica estilos a todos los elementos.
@@ -420,7 +433,7 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
 
 **Ejemplo de Propiedades Comunes**
 
-**1. Propiedades de Texto:**
+### 1. Propiedades de Texto:
 
     ```jsx title="color: Cambia el color del texto."
     p {
@@ -456,12 +469,19 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
     }
     ```
 
+    ```jsx title="text-transform: Elimina la decoración o subrayado"
+    p {
+            text-decoration: none;
+    }
+    ```
+
+
 <br/><br/>
 
-**2.  Propiedades de Fondo**
+### 2. Propiedades de Fondo
 
 
-    ```jsx title="background-color: Cambia el color de fondo.mplo"
+    ```jsx title="background-color: Cambia el color de fondo"
     body {
         background-color: lightgray; /* El fondo será gris claro */
     }
@@ -475,16 +495,28 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
     }
     ```
 
-    
+    ```jsx title="background-image: No repitirá la imagen en caso que no cubra todo"
+    div {
+     background-repeat: no-repeat;
+    }
+    ```
+
 
     ```jsx title="background-size: Ajusta el tamaño de la imagen de fondo."
     div {
         background-size: cover; /* La imagen cubrirá todo el área */
     }
     ```
+
+    ```jsx title="background-size: Centra la imagen"
+    div {
+         background-position: center;
+    }
+    ```
+
 <br/><br/>
 
-**3. Propiedades de Espaciado**
+### 3. Propiedades de Espaciado
 
     ```jsx title="margin: Espacio exterior de un elemento."
     div {
@@ -501,7 +533,7 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
 
 <br/><br/>
 
-**4. Propiedades de Bordes**
+### 4. Propiedades de Bordes
 
    
     ```jsx title="border: Define el borde de un elemento."
@@ -520,13 +552,11 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
 
 <br/><br/>
 
-**5. Propiedades de Dimensiones**
-
-
+### 5. Propiedades de Dimensiones
 
     ```jsx title="width: Define el ancho del elemento."
     img {
-        width: 100px; /* La imagen tendrá 100 píxeles de ancho */
+        width: 100%; /* La imagen ocupará todo el ancho */
     }
     ```
 
@@ -537,9 +567,10 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
     ``` 
 
 
+
 <br/><br/>
 
-**6. Propiedades de Posicionamiento**
+### 6. Propiedades de Posicionamiento
 
 
 
@@ -615,32 +646,25 @@ En caso que quisieramos utilizar otra, podemos utilizar otras desde Google Fonts
 
 ![tipografia4](/img/tipografia4.png)
 
--   Desde nuestro archivo HTML en el HEAD, incorporaremos el enlace
+-   Desde nuestro archivo CSS incorporaremos el enlace
 
 ![tipografia5](/img/tipografia5.png)
 
-```jsx title="html"
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!--CSS-->
-    <link rel="stylesheet" href="../css/styles.css">
+```jsx title="css"
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Hace que las dimensiones incluyan bordes y rellenos */
+}
 
 
-    <!-- Fuente tipográfica Externa -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
-
-    <title>Document</title>
-</head>
+/* Fuente Tipográfica Externa */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap');
 
 ```
 
--  Desde nuestro CSS le pondremos el valor a la propiedad.
+- Google Fonts también nos proveé el valor a la propiedad.
 
     ![tipografia6](/img/tipografia6.png)
 
@@ -662,6 +686,7 @@ section {
     /* Estilo específico para el elemento hijo <p> */
     section p {
     font-size: 16px;
+    }
 }
 
 ```

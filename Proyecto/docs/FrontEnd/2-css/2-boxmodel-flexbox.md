@@ -2,12 +2,19 @@
 sidebar_position: 1
 ---
 
-# 2 - Introducción al Box Model
+# 2 - Introducción al Box Model y FlexBox
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+## ---------- Box Model ---------- 
 
 ## Detalle de las Cuatro Partes Principales del Box Model.
 
 El Box Model es un concepto fundamental en CSS que describe cómo se colocan y se dimensionan los elementos HTML en una página web. 
+
 Comprender las cuatro partes principales del Box Model es esencial para controlar el tamaño y el espaciado de los elementos.
+
+**El Box Model es la estructura básica de diseño en CSS. Cada elemento en una página web se trata como una caja rectangular y su tamaño y posición se determinan por las siguientes propiedades:**
     -   content
     -   padding
     -   border
@@ -69,6 +76,9 @@ Distintos tipos de bordes:
     -   **outset:** Hace que el borde parezca sobresalir del elemento (hacia afuera).
     -   **none  :** Sin borde
     -   **hidden:** Similar a none, pero afecta al diseño de tablas (oculta bordes sin alterar el modelo de caja).
+
+
+![border2](/img/border2.png)
 
 ```jsx title="Ejemplo"
 <div class="border-box">Contenido con Border</div>
@@ -478,14 +488,22 @@ En este ejemplo, el elemento < div class="sticky-box"> se mantiene a 10px del bo
 
 <br/><br/>
 
+-------------------------------------------------------------------------------------------------
+
+## ---------- Flex Box ---------- 
+
 ## Propiedades Principales de Flexbox para el Contenedor
 Flexbox es un modelo de diseño en CSS que facilita la creación de layouts (Disposición de los elementos en una página) flexibles y eficientes. Se centra en el uso de un contenedor flexible (flex container) y elementos hijos flexibles (flex items). Esto nos permitirá organizar los elementos de nuestra web de una forma más dinámica, y servirá a futuro para adaptar tu sitio a distintos dispositivos.
+
+:::tip
+**Trabaja con elementos Hijos, pero el estilo debe aplicarse al padre.**
+:::
 
 A continuación, se explican las propiedades principales que se aplican al contenedor flex, junto con ejemplos de código CSS.
 
 ### display: flex
 
-La propiedad display: flex define un contenedor como un flex container y habilita el uso de todas las propiedades Flexbox en sus elementos hijos.
+La propiedad **display: flex** define un contenedor como un flex container y habilita el uso de todas las propiedades Flexbox en sus elementos hijos.
 
 
 ```jsx title="html"
@@ -661,9 +679,16 @@ flex-flow: <flex-direction> <flex-wrap>;
 
 <br/><br/>
 
-### justify-content
+### justify-content (Eje X)
 
 La propiedad justify-content alinea los elementos flexibles a lo largo del eje principal del contenedor (horizontalmente en una fila, verticalmente en una columna).
+
+:::tip
+Sirve para aplicar estilo sobre el Eje "X".
+
+![justify-content0](/img/justify-content0.png)
+
+:::
 
 #### Valores
 
@@ -690,9 +715,16 @@ La propiedad justify-content alinea los elementos flexibles a lo largo del eje p
 
 <br/><br/>
 
-### align-items
+### align-items (Eje Y)
 
 La propiedad align-items alinea los elementos flexibles a lo largo del eje transversal (perpendicular al eje principal) del contenedor.
+
+:::tip
+Sirve para aplicar estilo sobre el Eje "Y".
+
+![align-items0](/img/align-items0.png)
+
+:::
 
 **Podría decirse que se encarga de alinear los elementos en altura.**
 

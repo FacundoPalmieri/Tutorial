@@ -2,10 +2,11 @@
 sidebar_position: 1
 ---
 
-# 2 - Introducción al Box Model y FlexBox
+# 2 - Box Model y FlexBox
 
-
+---------
 ## ---------- Box Model ---------- 
+
 
 ## Detalle de las Cuatro Partes Principales del Box Model.
 

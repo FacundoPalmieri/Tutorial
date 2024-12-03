@@ -3,7 +3,7 @@ sidebar_position: 1
 ---
 
 # 1 - Conceptos Básicos
-
+----
 
 ## ¿Qué es el CSS?
 

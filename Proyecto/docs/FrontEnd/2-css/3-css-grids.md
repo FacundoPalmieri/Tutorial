@@ -1138,30 +1138,38 @@ Queremos un diseño con tres columnas en pantallas grandes (escritorio) y una so
 </head>
 <body>
   <div class="container">
+
+    <!-- Área del encabezado -->
     <header class="header">
       <h1>Encabezado</h1>
     </header>
+
+    <!-- Área de la barra lateral -->
     <aside class="sidebar">
       <h2>Barra Lateral</h2>
       <p>Contenido de la barra lateral.</p>
     </aside>
+
+    <!-- Área del contenido principal -->
     <main class="main">
       <h2>Contenido Principal</h2>
       <p>Este es el contenido principal de la página.</p>
     </main>
+
+    <!-- Área del contenido adicional -->
     <aside class="aside">
       <h2>Contenido Adicional</h2>
       <p>Información o enlaces adicionales.</p>
     </aside>
+
+    <!-- Área del pie de página -->
     <footer class="footer">
       <p>&copy; 2024 Mi Sitio Web</p>
     </footer>
+
   </div>
 </body>
 </html>
-
-
-
 ```
 
 
@@ -1258,30 +1266,38 @@ El enfoque de desarrollo **mobile first** implica diseñar y desarrollar un siti
 </head>
 <body>
   <div class="container">
+
+    <!-- Área del encabezado -->
     <header class="header">
       <h1>Encabezado</h1>
     </header>
+
+    <!-- Área de la barra lateral -->
     <aside class="sidebar">
       <h2>Barra Lateral</h2>
       <p>Contenido de la barra lateral.</p>
     </aside>
+
+    <!-- Área del contenido principal -->
     <main class="main">
       <h2>Contenido Principal</h2>
       <p>Este es el contenido principal de la página.</p>
     </main>
+
+    <!-- Área del contenido adicional -->
     <aside class="aside">
       <h2>Contenido Adicional</h2>
       <p>Información o enlaces adicionales.</p>
     </aside>
+
+    <!-- Área del pie de página -->
     <footer class="footer">
       <p>&copy; 2024 Mi Sitio Web</p>
     </footer>
+
   </div>
 </body>
 </html>
-
-
-
 ```
 
 

@@ -1242,3 +1242,103 @@ Imagen Celular
 ![celular1](/img/celular1.png)
 
 <br/><br/>
+
+### Mobile First.
+
+El enfoque de desarrollo **mobile first** implica diseñar y desarrollar un sitio web inicialmente para dispositivos móviles y luego adaptarlo progresivamente para pantallas más grandes como tabletas y computadoras de escritorio. Este enfoque garantiza que el contenido y la funcionalidad principal estén accesibles y optimizados para los usuarios móviles, que representan una gran parte del tráfico web actual.
+
+```jsx title="html"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diseño con Grid</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Encabezado</h1>
+    </header>
+    <aside class="sidebar">
+      <h2>Barra Lateral</h2>
+      <p>Contenido de la barra lateral.</p>
+    </aside>
+    <main class="main">
+      <h2>Contenido Principal</h2>
+      <p>Este es el contenido principal de la página.</p>
+    </main>
+    <aside class="aside">
+      <h2>Contenido Adicional</h2>
+      <p>Información o enlaces adicionales.</p>
+    </aside>
+    <footer class="footer">
+      <p>&copy; 2024 Mi Sitio Web</p>
+    </footer>
+  </div>
+</body>
+</html>
+
+
+
+```
+
+
+
+```jsx title="css"
+/* Estilo base para móviles (una sola columna) */
+.container {
+  display: grid;
+  grid-template-columns: 1fr;  /* Una sola columna */
+  grid-template-areas:
+    "header"
+    "main"
+    "sidebar"
+    "aside"
+    "footer";
+  gap: 10px;
+}
+
+.header {
+  grid-area: header;
+}
+
+.sidebar {
+  grid-area: sidebar;
+}
+
+.main {
+  grid-area: main;
+}
+
+.aside {
+  grid-area: aside;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+/* Media Query para pantallas medianas y grandes */
+@media (min-width: 600px) {
+  .container {
+    grid-template-columns: 1fr 2fr 1fr; /* Tres columnas */
+    grid-template-areas:
+      "header header header"
+      "sidebar main aside"
+      "footer footer footer";
+  }
+}
+
+```
+
+#### Explicación del enfoque Mobile First
+
+**1.  Estilos base (para móviles):**
+
+- El diseño inicial usa una sola columna con todas las áreas apiladas verticalmente. Esto garantiza que sea funcional en pantallas pequeñas sin necesidad de ajustes adicionales.
+
+**2.  Media Query para pantallas más grandes:**
+
+- A partir de 600px de ancho, aplicamos un diseño más complejo con tres columnas y áreas distribuidas horizontalmente, aprovechando mejor el espacio disponible.

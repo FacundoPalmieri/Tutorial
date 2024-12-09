@@ -7,7 +7,90 @@ sidebar_position: 10
 
 En este apartado intentaremos comprender los concpetos generales, mediante el paso a paso, en la creación de un proyecto utilizando las herramientas de **Spring boot + Spring Security + OAuth2.**
 
-## **Creación del Proyecto**
+## Flujo del proceso
+
+1. El usuario ingresa sus credenciales.
+
+2. El **AuthenticationController** recibe las credenciales en un DTO y llama al método **loginUser** de la clase **userDetailsService** para validarlas.
+    - *(La clase userDetailsService tiene métodos que gestionan la autenticación de los usuarios, valida las credenciales, y devuelve un token JWT cuando la autenticación es exitosa.)*
+
+3. El método **LoginUser** autentica las credenciales por medio del método **authenticate** de la misma clase.
+---------
+#### Proceso interno del authenticate.
+
+    -   3.1 El método **authenticate** realiza dos pasos principales:
+
+        -   Por medio del método **loadUserByUsername**  recupera los detalles del usuario desde la base de datos(Ej Roles y permisos) y los carga en una lista GrantedAuthority que luego se asignará a la autenticación.
+    
+        -   Verifica la contraseña recibida utilizando **PasswordEncoder** y, si es correcta, se genera un objeto de autenticación **UsernamePasswordAuthenticationToken** que contiene Nombre de usuario, contraseña y lista de roles y permisos.
+
+    -   3.2. En la clase **SecurityConfig** se van a configurar todos los componentes de Spring Security:
+
+        -  **Cadenas de filtro de validación.**
+            -   Desactivar CSRF: vulnerabilidad en la que un atacante puede hacer que un usuario autenticado realice acciones no deseadas en una aplicación web.
+            -  Configura el formulario de inicio de sesión estándar.
+            -  Session Creation Policy se establece como STATELESS, lo que significa que la aplicación no mantendrá estado de sesión entre las solicitudes.
+            -  Se agrega un filtro personalizado de validación (JwtTokenValidator) que se ejecuta antes del filtro de autenticación estándar de   Spring Security (BasicAuthenticationFilter).
+            -  Se configura el inicio de sesión con OAuth2, permitiendo que los usuarios inicien sesión usando proveedores de autenticación como Google, Facebook, GitHub, etc.
+
+        -  **AuthenticationManager.**
+        -  **AuthenticationProvider.**
+        -  **PasswordEncoder.**
+    
+    
+
+    -   3.3 Una vez que la autenticación se inicia, el **AuthenticationManager** es responsable de gestionar el proceso de autenticación y validación. Cuando se inicia el proceso con un **UsernamePasswordAuthenticationToken**, el **AuthenticationManager** delega la tarea de validación y autenticación en uno o más **AuthenticationProvider** (en este caso, puede ser OAuth2, dependiendo de la configuración).
+
+        -   **Validación:** Asegura que las credenciales proporcionadas (como el nombre de usuario y la contraseña) sean correctas, es decir, que coincidan con lo que está almacenado en la base de datos.
+
+        -   **Autenticación:** Una vez validadas las credenciales, el sistema confirma que la persona que está intentando acceder es quien dice ser, asignándole los permisos correspondientes y creando un objeto de autenticación (por ejemplo, un UsernamePasswordAuthenticationToken que contiene la información del usuario y sus roles).
+
+    -   3.4. El **DaoAuthenticationProvider**  se encarga de autenticar a los usuarios, utilizando el **UserDetailsService** para cargar los detalles del usuario y el **PasswordEncoder** para comparar la contraseña.
+
+    -   3.5. El **PasswordEncoder** es fundamental para la seguridad, ya que en lugar de almacenar la contraseña en texto plano, se almacena en forma de hash, y durante el proceso de autenticación, se compara el hash de la contraseña proporcionada con el almacenado. Utiliza BCryptPasswordEncoder, que es uno de los algoritmos de hash más seguros disponibles en Spring Security.
+
+    -   3.6 Sino se presentan errores, la autenticación fue correcta y continúa el flujo en el método **loginUser**
+
+---------
+
+4. Cuando la autenticación es exitosa, el método **loginUser** almacena la autenticación en **SecurityContextHolder** y luego llama a **createToken** en la clase JwtUtils, lo que genera un JWT que contiene:
+
+    -   El nombre de usuario (obtenido de authentication.getPrincipal()).
+    -   Las autoridades o permisos (obtenidos de authentication.getAuthorities() y convertidos a un formato de cadena separada por comas).
+    -   El issuer (quién generó el token).
+    -   La fecha de expiración (en este caso, 30 minutos después de la emisión).
+    -   Un ID único para el token.
+    -   La fecha de inicio de validez (el token es válido inmediatamente).
+    -   El token se firma utilizando el HMAC256 y una clave secreta, garantizando su integridad y seguridad.
+
+*(La clase JwtUtils se encarga de manejar la creación, validación y extracción de información de un token JWT)*
+
+
+5. Cuando el cliente envía una solicitud posterior con el token JWT, el **JwtTokenValidator** realiza los siguientes pasos:
+
+    -   Extrae el token JWT del encabezado Authorization de la solicitud HTTP.
+    -   Verifica la validez del token: Se valida que el token no haya expirado y que su firma sea válida utilizando la clave secreta y el algoritmo HMAC256.
+    -   Extrae la información del token: Una vez validado, se extraen los datos contenidos en el token, como el nombre de usuario y las autoridades. Estos datos se utilizan para autenticar al usuario y otorgar acceso a los recursos solicitados.
+    -   Si el token es válido, la autenticación se completa con éxito y Spring Security configura el contexto de seguridad para la solicitud posterior.
+
+
+
+
+### *Resumen del Proceso de Autenticación*
+
+-   El usuario envía sus credenciales al servidor a través del controlador AuthenticationController.
+
+-   El controlador delega la autenticación a UserDetailsServiceImp, que valida las credenciales utilizando UserDetailsService y PasswordEncoder.
+
+-   Si las credenciales son correctas, se genera un token JWT y se almacena la autenticación en el SecurityContextHolder.
+
+-   El token JWT se valida en solicitudes posteriores a través del filtro JwtTokenValidator.
+
+-   Si el token es válido, el usuario se autentica y se le permite acceder a recursos protegidos.
+
+## **Implementación - Spring Security**
+
+## Creación del Proyecto
 ![inicio proyecto](/img/InicioProyecto.png)
 
 ### *Dependencias*
@@ -60,7 +143,7 @@ security.jwt.user.generator=${USER_GENERATOR}
 
 ```
 
-## **Creación Package model**
+## Creación Package model
 
 ### *Clases* 
 - Permission
@@ -145,7 +228,7 @@ public class UserSec {
 }
 ```
 
-## **Creación Package repository**
+## Creación Package repository
 ### *Interfaces* 
 
 ```jsx title="IPermissionRepository"
@@ -176,7 +259,7 @@ public interface IUserRepository extends JpaRepository<UserSec, Long> {
 Se realiza una consulta Personalizada para buscar un username, pasandole como parámetro el username que nos llega en la request. La consulta explicita la arma Spring ya que al estár en inglés entiende lo que tiene que buscar
 :::
 
-## **Creación Package service**
+## Creación Package service
 ### *Interfaces*
 - IPermissionService
 - IRoleService
@@ -419,7 +502,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
 
 
-## **Creación Package security.config.**
+## Creación Package security.config
 ### *Clase*  
 - SecurityConfig
 
@@ -589,10 +672,15 @@ Si falla, se lanza una excepción (como BadCredentialsException).
 **Flujo visual**
 
 [AuthenticationManager]
+
         ↓ Delegación
+
 [AuthenticationProvider]
+
         ↓
+
 [UserDetailsService] → Valida usuario
+
 [PasswordEncoder]   → Valida contraseña
 :::
 
@@ -613,7 +701,7 @@ Encripta la password
 
 
 
-## **Creación Package controller**
+## Creación Package controller
 
 ### *Clases*  
 - PermissionController.
@@ -931,7 +1019,7 @@ public class UserController {
 
 
 
-## - **Configuraciones JWT (Tokens)**
+## - **Implementación - JWT (Tokens)**
 Los token se componen de un header, payload y signature.
 Debemos generar una clave privada para firmar los token, eso lo hacemos ingresando a la siguiente página para generalo : 
 - https://tools.keycdn.com/sha256-online-generator
@@ -950,7 +1038,7 @@ security.jwt.user.generator=${USER_GENERATOR}
 
 ```
 
-## **Creación Package util**
+## Creación Package util
 
 
 La clase JwtUtils se utiliza para gestionar tokens JWT en una aplicación Spring Boot. Contiene métodos para crear, validar y extraer información de los tokens.
@@ -1073,7 +1161,7 @@ public class JwtUtils {
 
 
 
-### **JWT Token Validator (Package Security.config)**
+### JWT Token Validator (Package Security.config)
 
 ####  Se crea un subpackage "filter"
 
@@ -1169,7 +1257,7 @@ Método "doFilterInternal"
 ```
 
 
-## **SecurityFilterChain (Package SecurityConfig)**
+## SecurityFilterChain (Package SecurityConfig)
 
 Se agrega a la cadena de filtros (SecurityFilterChain) el nuevo filtro de JwtTokenValidator.
 
@@ -1187,7 +1275,7 @@ Se agrega --->  .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthentic
 
 
 
-## **Controller de Autenticación (Package Controller)**
+## Controller de Autenticación (Package Controller)
 
 Crearemos un controller que se encargue de autenticar. Utilizaremos una clase DTO para transferir datos. Este DTO lo crearemos en el siguiente apartado.
 
@@ -1223,7 +1311,7 @@ public class AuthenticationController {
 
 
 
-### **Creación DTO**
+## Creación DTO
 
 Estas clases seran del tipo **record**. Esto permite identificarla como DTO, ya que no será necesario los get, set y constructores.
 
@@ -1234,7 +1322,8 @@ Estas clases seran del tipo **record**. Esto permite identificarla como DTO, ya 
     - password
 
 ```jsx title="AuthLoginRequestDTO"
-public record AuthLoginRequestDTO (@NotBlank String username, @NotBlank String password) {
+public record AuthLoginRequestDTO (@NotBlank String username, 
+                                   @NotBlank String password) {
 }
 ```
 
@@ -1246,41 +1335,17 @@ public record AuthLoginRequestDTO (@NotBlank String username, @NotBlank String p
     - status
 
 ```jsx title="AuthResponseDTO"
-@JsonPropertyOrder({"username", "message", "jwt", "status"})
-public record AuthResponseDTO (String username, String message, String jwt, boolean status) {
+@JsonPropertyOrder({"username", "message", "jwt", "status"}) // Establece el orden de los atributos en el armado del JSON (NO SIEMPRE ES NECESARIO)
+public record AuthResponseDTO (String username, 
+                               String message, 
+                               String jwt, 
+                               boolean status) {
 }
 ```
 
 
 
-
-
-
-
-
-## Package Service
-### UserDetailServiceImp
-#### Se crea los siguientes Métodos:
-- authenticate
-    - Recibe como parámetros usuario y contraseña.
-    - Recuperamos el usuario y contraseña por medio del método loadUserByUsername.
-    - Retornamos la autenticación.
-
-```jsx title="authenticate"  
- public Authentication authenticate (String username, String password) {
-        //con esto debo buscar el usuario
-        UserDetails userDetails = this.loadUserByUsername(username);
-
-        if (userDetails==null) {
-            throw new BadCredentialsException("Ivalid username or password");
-        }
-        // si no es igual
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid password");
-        }
-        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
-    }
-```
+## Login User (UserDetailsServiceImp)
 
 - loginUser
     - Se recupera usuario y contraseña.
@@ -1291,14 +1356,17 @@ public record AuthResponseDTO (String username, String message, String jwt, bool
 
 
 ```jsx title="loginUser"  
-  public AuthResponseDTO loginUser (AuthLoginRequestDTO authLoginRequest){
+    public AuthResponseDTO loginUser (AuthLoginRequestDTO authLoginRequest){
 
-        //recuperamos nombre de usuario y contraseña
+        //Se recupera nombre de usuario y contraseña
         String username = authLoginRequest.username();
         String password = authLoginRequest.password();
 
+
+        // Se llama al método authenticate.
         Authentication authentication = this.authenticate (username, password);
-        //si todo sale bien
+
+        //si es autenticado correctamente se almacena la información SecurityContextHolder y se crea el token.
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String accessToken =jwtUtils.createToken(authentication);
         AuthResponseDTO authResponseDTO = new AuthResponseDTO(username, "login ok", accessToken, true);
@@ -1308,10 +1376,40 @@ public record AuthResponseDTO (String username, String message, String jwt, bool
 ```
 
 
-### Configurar OAtuh2
-Acceso a la clase SecurityConfig
-**Método**
-- SecurityFilterChain: Agrego .oauth2Login(Customizer.withDefaults())
+## authenticate (UserDetailsServiceImp)
+
+- authenticate
+    - Recibe como parámetros usuario y contraseña.
+    - Recuperamos el usuario y contraseña por medio del método loadUserByUsername.
+    - Retornamos la autenticación.
+
+```jsx title="authenticate"  
+    public Authentication authenticate (String username, String password) {
+        //Recupero información del usuario por el username
+        UserDetails userDetails = this.loadUserByUsername(username);
+
+        // En caso que sea nulo, se informa que no se pudo encontrar al usuario.
+        if (userDetails==null) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        // En caso que no coincidan las credenciales se informa que la password es incorrecta
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
+    }
+```
+
+
+
+
+
+## **Implementación - OAtuh2**
+
+## SecurityFilterChain (Package SecurityConfig)
+
+### *Método*
+- Se agrega a la cadena de filtro:  .oauth2Login(Customizer.withDefaults())
 
 ```jsx title="Ejemplo"
     @Bean
@@ -1326,7 +1424,11 @@ Acceso a la clase SecurityConfig
     }
 ```
 
-- Endpoints: Agregamos el  @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+
+## Securización de los endpoints(Package Controller)
+
+Se debe agregar el @PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+
 :::tip
 **@PreAuthorize("isAuthenticated() and hasRole('ADMIN')")** :
 Permite acceso SOLO a quienes están autenticados y posean roles ADMIN. 
@@ -1345,7 +1447,7 @@ Permite acceso SOLO a quienes están autenticados y posean roles ADMIN.
 
 ## Configuración a Google como proveedor de Autenticación
 
-### ApplicationProperties
+### *ApplicationProperties*
 Se agrega las siguientes variable de entorno :
 
 ```jsx title="Variable Entorno OAuth2"
@@ -1353,6 +1455,9 @@ Se agrega las siguientes variable de entorno :
 spring.security.oauth2.client.registration.google.client-id=${GOOGLE_CLIENT_ID}
 spring.security.oauth2.client.registration.google.client-secret=${GOOGLE_CLIENT_SECRET}
 ```
+
+
+### *Consola Google*
 
 Se ingresa a la siguiente URL:
 - https://console.cloud.google.com/welcome?project=springsecurity0auth2

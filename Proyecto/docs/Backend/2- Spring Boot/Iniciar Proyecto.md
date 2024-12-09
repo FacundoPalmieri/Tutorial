@@ -9,6 +9,17 @@ sidebar_position: 10
 ![dependenciasboot](/img/dependenciasboot.png)
 
 
+```jsx title="Annotation - validaciones a usarse en DTO"
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+     <artifactId>spring-boot-starter-validation</artifactId>
+</dependency>
+
+```
+
+
+
+
 
 ### Configuraciones en el application.properties
 - Base de datos mediante variables de entorno.

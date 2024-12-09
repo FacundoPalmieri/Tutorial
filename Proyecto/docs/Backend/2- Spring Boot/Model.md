@@ -320,15 +320,17 @@ private HistoriaClinica historiaClinica;
 
 ## Resumen de Annotations
 
-Puedes usar las anotaciones de JPA para definir los detalles de las columnas, como longitud, si es único, si es nullable, etc.
 
-#### Ejemplo para cambiar el nombre de mi tabla en la base de datos:
+**- @Entity**: Marca una clase como una entidad de JPA, lo que significa que estará mapeada a una tabla de la base de datos.
+
 
 **- @Table(name = "nombre_de_la_tabla")¨** : Permite definir el nombre de la tabla de la entidad en la base de datos.
 
-<br/>
+**- @Id** : Especifica el atributo que actúa como clave primaria en la entidad.
 
-#### Ejemplo de columna con restricciones:
+
+**- @GeneratedValue** : Configura cómo se generará el valor para la clave primaria (estrategias: AUTO, IDENTITY, SEQUENCE, TABLE).
+
 
 **- @Column:** : Define detalles de la columna, como el nombre (name), la longitud máxima (length), si es nullable (permitiendo valores nulos o no), y si es único (unique = true). 
 
@@ -336,13 +338,8 @@ Puedes usar las anotaciones de JPA para definir los detalles de las columnas, co
 @Column(name = "nombre", length = 50, nullable = false)
 :::
 
-<br/>
 
 **- @JoinColumn:** Crea la clave foránea en la columna. Si nullable = false, significa que la columna no puede tener valores nulos.
-
-<br/>
-
-#### Resumen de relaciones y anotaciones:
 
 **- @OneToOne:** Relación de uno a uno entre dos entidades. Ejemplo: un Empleado tiene un solo Pasaporte.
 
@@ -352,7 +349,6 @@ Puedes usar las anotaciones de JPA para definir los detalles de las columnas, co
 
 **- @ManyToMany:** Relación de muchos a muchos, donde varias entidades A se relacionan con varias entidades B. Ejemplo: varios Estudiantes pueden estar en varios Cursos.
 
-En todos estos casos, las anotaciones de JPA como @JoinColumn, @ManyToOne, @OneToMany y @ManyToMany son esenciales para definir las relaciones entre las tablas de la base de datos y las entidades en el código Java.
 
 <br/><br/>
 

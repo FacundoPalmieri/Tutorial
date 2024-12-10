@@ -5,7 +5,7 @@ sidebar_position: 1
 # 2 - Box Model y FlexBox
 
 ---------
-## ---------- Box Model ---------- 
+## **Box Model** 
 
 
 ## Detalle de las Cuatro Partes Principales del Box Model.
@@ -490,7 +490,7 @@ En este ejemplo, el elemento < div class="sticky-box"> se mantiene a 10px del bo
 
 -------------------------------------------------------------------------------------------------
 
-## ---------- Flex Box ---------- 
+## **Flex Box** 
 
 ## Propiedades Principales de Flexbox para el Contenedor
 Flexbox es un modelo de diseño en CSS que facilita la creación de layouts (Disposición de los elementos en una página) flexibles y eficientes. Se centra en el uso de un contenedor flexible (flex container) y elementos hijos flexibles (flex items). Esto nos permitirá organizar los elementos de nuestra web de una forma más dinámica, y servirá a futuro para adaptar tu sitio a distintos dispositivos.

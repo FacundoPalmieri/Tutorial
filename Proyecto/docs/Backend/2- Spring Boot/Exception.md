@@ -493,3 +493,13 @@ public record CursoDto(
 
 }
 ```
+
+<br/><br/>
+
+## Conclusión
+
+**Validación estándar (@NotNull, @Min, @Max):** Perfecta para validaciones simples y sin acceso a la base de datos.
+
+**Validación personalizada:** Útil cuando tienes una regla compleja que no se puede resolver con las validaciones estándar (como verificar unicidad o lógica específica del negocio).
+
+**Validaciones con consulta a la base de datos:** La validación que depende de la base de datos (como verificar unicidad de un campo) debe hacerse en la capa de servicio con métodos privados y no en las anotaciones del DTO.

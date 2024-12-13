@@ -269,6 +269,8 @@ Para ajustar la posición y el tamaño de elementos específicos, utilizaremos p
 
 - **grid-row**
 
+- **grid-auto-row**
+
 - **grid-area**
 
 ### grid-column
@@ -429,6 +431,27 @@ Si no se define < end>, el elemento ocupará solo una fila.
 
 ![grid-row](/img/grid-row.png)
 
+
+<br/><br/>
+
+### grid-auto-rows
+
+La propiedad **grid-auto-rows** se utiliza en un contenedor CSS Grid para especificar la altura de las filas que se generan automáticamente. Cuando se añaden elementos al grid que superan la cantidad de filas explícitamente definidas, estas nuevas filas usarán el tamaño especificado por grid-auto-rows.
+
+
+```jsx title="sintaxsis"
+grid-auto-rows: <valor>;
+
+```
+
+< valor>: Puede ser una longitud fija (como px, em, rem), un porcentaje, o una unidad flexible como fr (fracción del espacio disponible).
+
+
+#### Cómo Funciona
+
+**- Filas explícitas:** Las filas definidas con grid-template-rows tienen prioridad.
+
+**- Filas implícitas:** Si los elementos desbordan las filas explícitas, CSS genera filas adicionales automáticamente, utilizando la altura definida en grid-auto-rows.
 
 <br/><br/>
 

@@ -341,6 +341,7 @@ Se recomienda siempre empezar desde la etiqueta padre, posterior al Body. Ejempl
 -   footer
 :::
 
+------
 
 ## Selectores y Propiedades
 
@@ -592,7 +593,77 @@ Las propiedades definen los estilos específicos que quieres aplicar. Cada propi
     }
     ```
 
+<br/><br/>
 
+### 7. Propiedades de Imagenes
+
+**object-fit: cover**
+
+La propiedad object-fit define cómo un elemento, como una imagen o un video, debe ajustarse a su contenedor. Es particularmente útil para asegurarte de que las imágenes mantengan su proporción y llenen completamente un contenedor sin distorsionarse ni pixelarse.
+
+
+Cuando se aplica **object-fit: cover**, le indicamos al navegador que la imagen o el video debe:
+
+-   Llenar completamente el contenedor.
+
+-   Mantener sus proporciones originales (no se deforma).
+
+-   Recortar el contenido sobrante si es necesario para ajustarse al tamaño del contenedor.
+
+
+#### Ventajas de object-fit: cover
+
+**Evita distorsiones:** La imagen siempre mantiene su relación de aspecto original.
+
+**Diseño atractivo:** Se asegura de que el contenedor esté completamente lleno, eliminando espacios vacíos.
+
+**Mejor experiencia visual:** Evita imágenes pixeladas al escalarlas incorrectamente.
+
+```jsx title="Ejemplo"
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Object-Fit: Cover</title>
+    <style>
+        .image-container {
+            width: 300px;
+            height: 200px;
+            overflow: hidden; /* Esconde el contenido recortado */
+            border: 2px solid #333;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* La magia ocurre aquí */
+        }
+    </style>
+</head>
+<body>
+    <h1>Ejemplo con `object-fit: cover`</h1>
+    <div class="image-container">
+        <img src="https://via.placeholder.com/600x400" alt="Ejemplo de imagen">
+    </div>
+</body>
+</html>
+
+```
+
+#### Cómo Funciona
+
+**1.    El contenedor:** Tiene un tamaño fijo de 300px por 200px.
+
+**2.    La imagen:** Se escala para llenar completamente el contenedor.
+    -   Si la proporción de la imagen no coincide con el contenedor, se recorta el contenido sobrante.
+
+**3.    Resultado:** La imagen se ve limpia, centrada y sin deformaciones.
+
+
+<br/><br/>
+
+-----
 
 ## Reset del CSS
 

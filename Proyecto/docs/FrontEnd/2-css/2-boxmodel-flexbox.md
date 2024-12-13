@@ -1041,7 +1041,7 @@ En este ejemplo, cuando el contenedor tiene un ancho de 300px, Item 2 se encoger
 
 La propiedad flex-basis define el tamaño inicial de un ítem flexible antes de que se distribuya el espacio restante. Puede ser un valor fijo (px, em, etc.) o auto.
 
-### Uso
+#### Uso
 
 Se utiliza para establecer el tamaño base de un ítem antes de aplicar flex-grow o flex-shrink.
 

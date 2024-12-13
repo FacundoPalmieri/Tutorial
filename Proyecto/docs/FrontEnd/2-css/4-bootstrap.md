@@ -225,6 +225,8 @@ Supongamos que estamos creando un botón con un ícono y dos variantes (primario
 
 <br/><br/>
 
+-----
+
 ## **Bootstrap**
 
 Bootstrap es un **framework front-end desarrollado por Twitter** que facilita la creación de interfaces web modernas y responsivas utilizando CSS y JavaScript. Es una de las herramientas más populares para el desarrollo web debido a su facilidad de uso, amplia documentación y una gran comunidad de usuarios.

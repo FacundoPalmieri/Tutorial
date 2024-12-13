@@ -284,6 +284,46 @@ public class GlobalExceptionHandler {
 }
 ```
 
+
+### *Códigos de estado*
+
+**400 Bad Request:**: Solicitud mal formada (datos faltantes o inválidos).
+
+Ejemplo: Faltan campos requeridos en el cuerpo de la solicitud.
+
+<br/>
+
+**401 Unauthorized**: Se usa cuando el usuario no está autenticado.
+
+Ejemplo: Intentar acceder a un curso sin un token válido.
+
+ <br/>
+
+**403 Forbidden**: Se usa cuando el usuario no tiene permisos suficientes.
+
+Ejemplo: Un usuario sin rol de administrador intenta borrar un curso.
+
+<br/>
+
+**404 Not Found**: Se usa cuando un recurso no existe.
+
+Ejemplo: Solicitar un curso con un ID inexistente.
+
+<br/>
+
+**409 Conflict**: Indica un conflicto, como intentar crear un recurso duplicado.
+
+Ejemplo: Crear un curso con un ID que ya existe.
+
+<br/>
+
+**503 Service Unavailable:** Se usa cuando el servidor no está disponible.
+
+Ejemplo, durante mantenimiento.
+
+
+
+
 <br/><br/>
 
 ## **Validation**

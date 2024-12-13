@@ -17,20 +17,27 @@ Para que Spring boot identifique esta interfaz como tal, debemos colocar la anno
 
 En Spring Boot, se puede personalizar el nombre de la tabla en la base de datos usando la anotación **@Table.** Por defecto, el nombre de la tabla será el nombre de la clase de la entidad.
 
-```jsx title="class Paciente"
-@Entity
-@Table(name = "pacientes") // Definiendo el nombre de la tabla en PLURAL
-public class Paciente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    
-    private String nombre;
-    
-    // Getters y setters
-}
 
+```jsx title="sintaxsis"
+@Table(name = "nombreTabla") // Definiendo el nombre de la tabla en la base de datos en PLURAL
 ```
+
+**Ejemplo**: Tenemos la entidad **club** y en la base de datos, queremos que la tabla se nombre **clubes**.
+
+```jsx title="class Club"
+@Entity
+@Table(name = "clubes") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Club {
+
+    private Long id;
+    private String name;
+
+  
+    private Coach coach;
+
+}
+```
+
 <br/><br/>
 
 
@@ -39,33 +46,61 @@ public class Paciente {
 La anotación **@Id** define la clave primaria de la entidad, y **@GeneratedValue** especifica cómo se generará el valor de la clave primaria. Usualmente se usa GenerationType.IDENTITY para bases de datos que soportan la autoincrementación, como MySQL.
 
 
-```jsx title="class Paciente"
-@Id
-@GeneratedValue(strategy = GenerationType.IDENTITY)
-private Long id;
+```jsx title="sintaxsis"
+@Id // Clave Primaria.
+@GeneratedValue(strategy = GenerationType.IDENTITY) // Incremento en 1
+```
+
+```jsx title="class Club"
+@Entity
+@Table(name = "clubes") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Club {
+
+    @Id // Clave Primaria.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Incremento en 1
+    private Long id;
+    private String name;
+
+  
+    private Coach coach;
+
+}
+
 ```
 <br/><br/>
 
 
 ### Definir el Nombre de la Columna y Restricciones
 
-La anotación **@Column** para personalizar el nombre de las columnas y añadir restricciones como length, unique, nullable, etc.
+La anotación **@Column** permite  personalizar el nombre de las columnas y añadir restricciones como length, unique, nullable, etc.
+
+Sabemos por ejemplo que si tenemos nombres compuestos (Ej lastName) en la base de datos debería guardarse con un guión. Entonces con esta propiedad **@Column** podemos definir el nombre para la columna en SQL.
+
+En caso que la columna sea de unión, es decir una **Foreing Key** deberemos usar la annotation **@JoinColumn**
+
+```jsx title="sintaxsis"
+@Column(name = "xxx", length = 10, nullable = false, unique = true)
+
+```
 
 
-```jsx title="class Paciente"
+```jsx title="class coach"
 @Entity
-public class Paciente {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "coachs") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Coach {
+
+    @Id  // Clave Primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Incremento en 1
     private Long id;
-    
-    @Column(name = "nombre_completo", length = 100, nullable = false) // Renombramos la columna y aplicamos restricciones
-    private String nombre;
-    
-    @Column(name = "email", unique = true, nullable = false) // Hacemos la columna única y no nula
-    private String email;
-    
-    // Getters y setters
+
+    @Column(name = "name", length = 10, nullable = false, unique = true) // Restricciones
+    private String name;
+
+    @Column(name = "last_name", columnDefinition = "VARCHAR(100)") // Restricciones
+    private String lastName;
+
+    private String nationality;
+    private Integer age;
 }
 
 ```
@@ -79,8 +114,11 @@ En una aplicación Spring Boot que utiliza Hibernate para la persistencia de dat
 Las relaciones entre entidades son fundamentales para cualquier modelo de datos. JPA proporciona varias anotaciones para definir cómo se deben conectar las entidades entre sí, lo que nos permite modelar desde relaciones simples hasta estructuras complejas de base de datos. Las anotaciones más comunes son:
 
 **@OneToOne:**   Relación de uno a uno.
+
 **@ManyToOne:**  Relación de muchos a uno.
+
 **@OneToMany:**  Relación de uno a muchos.
+
 **@ManyToMany:** Relación de muchos a muchos.
 
 Además de estas anotaciones de relación, JPA también permite definir detalles sobre las columnas de las tablas, como la longitud de los campos, la unicidad, la obligatoriedad (nullable) y las claves foráneas (foreign keys).
@@ -88,29 +126,118 @@ Además de estas anotaciones de relación, JPA también permite definir detalles
 En este tutorial, exploraremos estas anotaciones, sus casos de uso y cómo configurar las relaciones y los detalles de las columnas en tus entidades. Aprenderás cómo trabajar con estas relaciones de manera eficiente en Spring Boot, utilizando Hibernate para facilitar la persistencia de datos en tu base de datos.
 
 
+-----
+
 ### @OneToOne: Relación de Uno a Uno
 
 Una relación **@OneToOne** significa que un registro de una tabla está relacionado con exactamente un registro de otra tabla.
 
-Ejemplo: Un paciente tiene una historia clínica única.
+:::info[Ejemplo]
 
-```jsx title="class Paciente"
+Supongamos que tenemos dos entidades, **Club** y**Coach**. Podemos pensarlo como una relación **OneToOne**. Un club de fútbol tiene solo un Coach, y un Coach pertenece a un solo club.
+:::
+
+Sabemos que en una relación 1 a 1, la Primary Key de una tabla pasa a ser Foreing Key en la otra tabla. La pregunta es, que PK debería ser FK en la otra tabla?. La realidad es que no hay una respuesta correcta, ya que eso depende de las necesidades del negocio. 
+
+Para esta ocasión, podremos la FK del lado del **Coach**
+
+
+#### Entidades.
+
+ ```jsx title="class Club"
 @Entity
-public class Paciente {
-    @Id
+@Table(name = "clubes") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Club {
+
+    @Id // Clave Primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String nombre;
-    
-    @OneToOne(cascade = CascadeType.ALL) // Relación uno a uno
-    @JoinColumn(name = "historia_clinica_id") // Nombre de la columna de clave foránea
-    private HistoriaClinica historiaClinica;
-    
-    // Getters y setters
+    private String name;
 }
 
 ```
+
+<br/><br/>
+
+```jsx title="class coach"
+@Entity
+@Table(name = "coachs") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Coach {
+
+    @Id // Clave Primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Incremento en 1
+    private Long id;
+
+    @Column(name = "name", length = 10, nullable = false, unique = true)
+    private String name;
+
+    @Column(name = "last_name", columnDefinition = "VARCHAR(100)")
+    private String lastName;
+
+    private String nationality;
+    private Integer age;
+}
+
+```
+
+<br/><br/>
+
+1.  Nos paramos en la entidad en donde nosotros queremos crear la relación, en este caso **Club** y agregamos un atributo de la otra entidad.
+
+#### Entidades.
+
+ ```jsx title="class Club"
+@Entity
+@Table(name = "clubes") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Club {
+
+    @Id // Clave Primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+
+    private Coach coach; // PASO 1 
+}
+
+```
+
+2.  Establecemos la relación **@OneToOne** sobre ese atributo. Esto generará la FK en la tabla **Club**. Es decir se agregará una columna **id_coach**.
+
+3.  Agregamos propiedad **(targetEntity = Coach.Class)** para establecer con que clase se hará la relación.
+
+4.  Agregamos la propiedad **cascade = CascadeType.xxx** para establecer comportamiento en cascada. Es decir, cualquier acción de insertar, eliminar, actualizar, etc impactará en la tabla relacionada.
+
+5.  Utilizamos la annotation **@JoinColumn** para establecer el nombre en la columna unión.
+
+
+```jsx title="class Club"
+@Entity
+@Table(name = "coachs") // Definiendo el nombre de la tabla en la base de datos en PLURAL
+public class Club {
+
+    @Id // Clave Primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+
+
+
+    @OneToOne(targetEntity = Coach.Class, cascade= CascadeType.ALL) // PASO 2, 3 Y 4
+    @JoinColumn(name = "id_coach")                                  // PASO 5    
+    private Coach coach; // PASO 1
+}
+
+```
+
+![club](/img/club1.png)
+
+![coach](/img/coach1.png)
+
+
+#### Resumen
+
 **@OneToOne:** Define la relación uno a uno.
 
 **cascade = CascadeType.ALL:** Indica que si se guarda, actualiza o elimina un Paciente, también se hará lo mismo con la HistoriaClinica.
@@ -120,114 +247,378 @@ public class Paciente {
 
 <br/><br/>
 
+
+
+-----
+
 ### @ManyToOne: Relación de Muchos a Uno
 
-La relación @ManyToOne significa que muchos registros de una tabla pueden estar relacionados con un solo registro de otra tabla.
+La relación **@ManyToOne** significa que muchos registros de una tabla pueden estar relacionados con un solo registro de otra tabla.
 
-Ejemplo: Muchos pacientes pueden tener el mismo odontólogo asignado.
+Existe dos casos:
 
-```jsx title=" class Paciente"
+**-   Bidireccionalidad** : Ambas entidades se conocen, y debemos configurar ambas.
+
+**-   Unidireccionalidad** Solo una entidad conoce a la otra. Solo que configura del lado del UNO.
+
+De acuerdo a las buenas prácticas de **SQL** en este tipo de relaciones, la Primary Key de tabla **One** pasa como Foreing Key a la tabla **Many**.
+
+:::info[Ejemplo]
+
+Supongamos que un **Club puede tener muchos Jugadores**, pero un **jugador solo puede pertencer a un club**. Es decir, entendemos que este ejemplo podría pensarse de esta manera:
+
+- **Many** : Jugadores
+
+- **One** : Club
+
+Siguiendo las buenas prácticas mencionadas, la **PK de club** debería pasar como **FK en jugadores**
+
+:::
+
+1. Creamos nuestra nueva **entidad Player**, la cual será mapeada como **tabla** a la base de datos.
+
+```jsx title="class player"
 @Entity
-public class Paciente {
+public class Player {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String nombre;
-    
-    @ManyToOne(fetch = FetchType.LAZY) // Relación muchos a uno
-    @JoinColumn(name = "odontologo_id") // Clave foránea
-    private Odontologo odontologo;
-    
-    // Getters y setters
+    private String name;
+
+    @Column(name = "last_name")
+    private String lastName;
+    private Integer age;
+    private String nationality;
 }
-
 ```
-**@ManyToOne:** Define la relación muchos a uno.
 
-**fetch = FetchType.LAZY:** Indica que la relación debe cargarse solo cuando sea necesario (por defecto es LAZY, lo que significa que no se carga inmediatamente).
+2. Agregamos un atributo correspondiente a la entidad relacionada.
+
+3. Colocamos la annotation **@ManyToOne(targetEntity = Club.class)**
+
+    - Como jugador corresponde a **Many** la annotation en esta entidad será la que empiece con ese nombre.
+
+    - Agregamos propiedad **(targetEntity = Club.Class)** para establecer con que clase se hará la relación.
+
+    - Está annotation se coloca para realizar una relación **Bidireccional**. Es decir, que ambas entidades se conozcan.
+
+4.  Utilizamos la annotation **@JoinColumn** para establecer el nombre en la columna unión.
+ 
+
+
+```jsx title="class player"
+@Entity
+public class Player {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @Column(name = "last_name")
+    private String lastName;
+    private Integer age;
+    private String nationality;
+
+    @ManyToOne(targetEntity = Club.class)  // PASO 3
+    @JoinColumn(name = "id_club")         //  PASO 4
+    private Club club;                   //   PASO 2
+
+}
+```
 
 <br/><br/>
+
+
+5. En nuestra entidad **club** colocaremos un atributo correspondiente a la entidad **jugadores**. Como pueden ser varios jugadores, pondremos una lista.
+
+6. Colocamos la annotation:
+
+**@OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY, mappedBy = "club")**
+
+    - Como club corresponde a **One** la annotation en esta entidad será la que empiece con ese nombre.
+
+    - Agregamos propiedad **(targetEntity = Player.Class)** para establecer con que clase se hará la relación. 
+
+    - **fetch = FetchType.LAZY**  Indica que la relación debe cargarse solo cuando sea necesario, es decir cuando se utilice el atributo "player" en el objeto "club".
+
+    - **FetchType.EAGER**:  Cuando se utiliza EAGER, la relación se carga inmediatamente junto con la entidad principal al instanciar un objeto "club", es decir, cuando se consulta una entidad que tiene una relación marcada con fetch = FetchType.EAGER, JPA carga tanto la entidad principal como las entidades relacionadas en una sola consulta.
+
+    - **mappedBy = "club"** : club, es el nombre del **atributo** en la entidad **player**. No es el nombre de la tabla, sino el atributo de la clase. Con esta propiedad, se está indicando que la relación debe ser mapeada por **club**, es decir se indica que en la tabla  **player** debe agregar la **Foreing Key a club**
+
+
+
+```jsx title="class club"
+@Entity
+public class Club {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY) // PASO 6
+    private List<Player> players;                                   // PASO 5
+}
+```
+
+<br/><br/>
+
+![club2](/img/club2.png)
+
+
+![player1](/img/player1.png)
+
+
+
+<br/><br/>
+
+
+-----
 
 ### @OneToMany: Relación de Uno a Muchos
 
 Una relación @OneToMany es la inversa de **@ManyToOne.** Significa que un registro de una tabla puede estar relacionado con muchos registros de otra tabla.
 
-Ejemplo: Un odontólogo puede atender a muchos pacientes.
+#### Ejemplo
+
+Supongamos que un **Club** puede pertencer **a una Asociación de Fútbol**, pero **a una Asociación de Fútbol pueden pertencer mucho Clubes**. Es decir, entendemos que este ejemplo podría pensarse de esta manera:
+
+- **One** : Asociación de Fútbol
+
+- **Many** : Clubes
+
+Siguiendo las buenas prácticas mencionadas, la **PK de club** debería pasar como **FK en Clubes**
 
 
-```jsx title="class Odontologo"
+1. Creamos nuestra nueva entidad **FootballAssociation**, la cual será mapeada como **tabla** a la base de datos.
+
+2. Agregamos un atributo correspondiente a la entidad relacionada.
+
+3. Colocamos la annotation 
+
+    ```jsx title="class ejemplo"
+    @OneToMany(targetEntity = Club, fetch = FetchType.LAZY, mappedBy = "footballAssociation")
+
+    ```
+    - Como FootballAssociation corresponde a **One** la annotation en esta entidad será la que empiece con ese nombre.
+
+    - Agregamos propiedad **(targetEntity = Club.Class)** para establecer con que clase se hará la relación.
+
+    - **fetch = FetchType.LAZY**  Indica que la relación debe cargarse solo cuando sea necesario, es decir cuando se utilice el atributo "player" en el objeto "club".
+
+    - **mappedBy = "footballAssociation"** : footballAssociation, es el nombre del **atributo** en la entidad **Club**. No es el nombre de la tabla, sino el atributo de la clase. Con esta propiedad, se está indicando que la relación debe ser mapeada por **footballAssociation**, es decir se indica que la tabla **club** debe agregar la **Foreing Key a footballAssociation**
+ 
+
+
+```jsx title="class FootballAssociation"
 @Entity
-public class Odontologo {
+public class FootballAssociation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String name;
+    private String country;
+    private String president;
+
+
+    @OneToMany(targetEntity = Club, fetch = FetchType.LAZY, mappedBy = "footballAssociation") // PASO 3
+    private List<Club> clubs;                                                                 // PASO 2
+
     
-    private String nombre;
-    
-    @OneToMany(mappedBy = "odontologo", fetch = FetchType.LAZY) // Relación uno a muchos
-    private List<Paciente> pacientes;
-    
-    // Getters y setters
 }
-
-
 ```
-**@OneToMany:** Define la relación uno a muchos.
+ 
+ <br/><br/>
 
-**mappedBy = "odontologo":** Indica que la relación se mapea desde la propiedad odontologo de la clase Paciente. En este caso "odontologo"  es el nombre del atributo(No del nombre en la bd) en la clase Paciente que está marcando la relación @ManyToOne hacia Odontologo. En otras palabras, el valor de mappedBy debe coincidir con el nombre de la propiedad que contiene la referencia a la clase Odontologo en la clase Paciente.
+4. En la entidad **Club** agregamos un atributo de nuestra clase FootballAssociation.
 
-**fetch = FetchType.LAZY:** La relación se carga de manera diferida.
+5. Colocamos la annotation **@ManyToOne(targetEntity = FootballAssociation.Class)**
+
+
+```jsx title="class club"
+@Entity
+public class Club {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY)
+    private List<Player> players;
+
+
+    @ManyToOne(targetEntity = FootballAssociation.Class) // PASO 5
+    private FootballAssociation  footballAssociation     // PASO 4
+}
+```
 
 <br/><br/>
+
+
+![football1](/img/football1.png)
+
+![club3](/img/club3.png)
+
+
+
+
+<br/><br/>
+-------
+
 
 ### @ManyToMany: Relación de Muchos a Muchos
 
 Una relación **@ManyToMany** significa que muchos registros de una tabla están relacionados con muchos registros de otra tabla.
 
-Ejemplo: Un paciente puede tener muchos tratamientos, y un tratamiento puede ser realizado a muchos pacientes.
+De acuerdo a las buenas prácticas de **SQL** en este tipo de relaciones, se debe genera una tabla intermedia para manejar ambas **FK** que serán **PK** en sus respectivas tablas.
+
+#### Ejemplo
+
+Podriamos pensar que un **club puede integrar varias competiciones**, y también en **una competicion pueden participar varios Clubes.**
 
 
-```jsx title="class Paciente"
+1. Creamos nuestra nueva entidad **FootballCompetition**, la cual será mapeada como **tabla** a la base de datos.
+
+
+```jsx title="class FootballCompetition"
 @Entity
-public class Paciente {
+public class FootballCompetition {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String nombre;
-    
-    @ManyToMany(cascade = CascadeType.ALL)
+    private String name;
+
+    @Column(name = "cuantity_price", columnDefinition = "VARCHAR(300)")
+    private int cuantityPrice;
+
+    @Column(name = "start_date", columnDefinition = "DATE", length = 10, nullable = false, unique = true)
+    private LocalDate startDate;
+
+    @Column(name = "end_date", columnDefinition = "DATE")
+    private LocalDate endDate;
+
+}
+```
+
+<br/><br/>
+
+2. En la entidad **Club**, agregamos un atributo de tipo lista, correspondiente a la entidad FootballCompetition
+
+
+```jsx title="class club"
+@Entity
+public class Club {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY)
+    private List<Player> players;
+
+
+    private List <FootballCompetition>  FootballCompetition                      // PASO 2
+
+}
+```
+
+3. Colocamos la annotation
+
+    ```jsx title="Ejemplo"
+    @ManyToOne(targetEntity = FootballAssociation.Class)
+    ```
+
+ 
+```jsx title="class club"
+@Entity
+public class Club {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY)
+    private List<Player> players;
+
+
+    @ManyToOne(targetEntity = FootballCompetition.Class, fetch = FetchType.LAZY)   // PASO 3
+ 
+    private List <FootballCompetition>  FootballCompetition                      // PASO 2
+
+}
+```
+
+
+4. Colocamos la siguientes annotation : 
+
+
+    ```jsx title="Ejemplo"
     @JoinTable(
-        name = "paciente_tratamiento",
-        joinColumns = @JoinColumn(name = "paciente_id"),
-        inverseJoinColumns = @JoinColumn(name = "tratamiento_id")
+        name = "club_competitions", 
+        JoinColumn = @JoinColumn(name = "club"), 
+        inverseJoinColumns = @JoinColumn(name= "competition")
     )
-    private List<Tratamiento> tratamientos;
+
+    ```
     
-    // Getters y setters
-}
 
-```
+     - **joinColumns = @JoinColumn(name = "club")"** : Define el nombre de la columna de clave foránea en la tabla intermedia (club_competitions) que apunta a la entidad actual (Club). En este caso, la columna club en la tabla intermedia referenciará el ID de la tabla Club.
+
+     -  **inverseJoinColumns = @JoinColumn(name = "competition")** : Define el nombre de la columna de clave foránea inversa en la tabla intermedia que apunta a la entidad relacionada (Competition).  
 
 
 
-```jsx title="class Tratamiento"
+```jsx title="class club"
 @Entity
-public class Tratamiento {
+public class Club {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    private String nombre;
-    
-    @ManyToMany(mappedBy = "tratamientos")
-    private List<Paciente> pacientes;
-    
-    // Getters y setters
-}
+    private String name;
 
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY)
+    private List<Player> players;
+
+
+    @ManyToOne(targetEntity = FootballCompetition.Class, fetch = FetchType.LAZY)   // PASO 3
+    @JoinTable(                                                                    // PASO 4
+        name = "club_competitions",
+        JoinColumn = @JoinColumn(name = "club"),
+        inverseJoinColumns = @JoinColumn(name= "competition")
+        )
+    private List <FootballCompetition>  FootballCompetition                      // PASO 2
+
+}
 ```
+
+![club-competition](/img/club-competition.png)
+
+
+#### Resumen
+
 **@ManyToMany:** Define la relación muchos a muchos.
 
 **@JoinTable:** Especifica la tabla intermedia que Spring Boot usará para manejar la relación.
@@ -237,49 +628,6 @@ public class Tratamiento {
 **inverseJoinColumns:** Especifica la clave foránea para la otra entidad.
 
 
-:::info[Important!]
-Es importante destacar que, cuando defines una relación **@ManyToOne** en una entidad, **no es obligatorio** crear la relación **@OneToMany** en la otra entidad. Sin embargo, es muy común hacerlo porque proporciona una manera conveniente de acceder a los registros relacionados desde ambas entidades.
-
-**Relación ManyToOne (de la entidad A a la entidad B):** Si tienes una relación @ManyToOne en la entidad A que se refiere a la entidad B, esto significa que muchos objetos de A pueden estar relacionados con un solo objeto de B. En este caso, en la entidad A defines la relación con la anotación @ManyToOne.
-
-Ejemplo: Un Paciente tiene un Odontologo asignado (relación muchos a uno).
-
-```jsx title="class Paciente"
-@ManyToOne(fetch = FetchType.LAZY)
-@JoinColumn(name = "odontologo_id")
-private Odontologo odontologo;
-```
-<br/><br/>
-
-**Relación OneToMany (de la entidad B a la entidad A):** En la entidad B (en este caso, Odontologo), podrías definir una relación @OneToMany que mapea todos los objetos de A (en este caso, todos los pacientes asignados a ese odontólogo).
-
-
-```jsx title="class Odontologo"
-@OneToMany(mappedBy = "odontologo", fetch = FetchType.LAZY)
-private List<Paciente> pacientes;
-```
-
-Spring Boot no requiere que siempre definas la relación @OneToMany en el lado "uno" de la relación (en este caso, Odontologo). De hecho, se puede tener una relación @ManyToOne sin necesidad de tener un @OneToMany en el otro lado. En este caso, solo se estaría navegando desde Paciente hacia Odontologo, pero no necesariamente necesitarías acceder desde Odontologo a todos sus Pacientes.
-
-
-#### Conclusión: 
-
-**@ManyToOne:** Puedes tener esta anotación en el lado "muchos", y Spring Boot manejará la relación sin necesidad de definir un @OneToMany en el lado "uno".
-
-**@OneToMany:** Si deseas poder acceder a la lista de objetos relacionados desde el lado "uno", entonces deberías incluirla, pero no es obligatorio.
-
-La elección de incluir un @OneToMany depende de tus necesidades. Si no necesitas acceder a la lista de pacientes desde un odontólogo, no es necesario incluir la relación @OneToMany en la entidad Odontologo.
-
-:::
-
-<br/><br/>
-
-
-### Cuando NO Usar una Entidad Intermedia
-
-En general, Spring Boot crea automáticamente una tabla intermedia en relaciones **@ManyToMany** cuando no se proporciona una tabla específica mediante **@JoinTable**. Sin embargo, no siempre es necesario crear una clase para la entidad intermedia, como en el ejemplo anterior de Paciente y Tratamiento.
-
-**¿Cuándo NO crearla?** Si la relación **@ManyToMany** no tiene atributos adicionales en la tabla intermedia (como fechas o estados), Spring Boot manejará la tabla intermedia automáticamente.
 
 
 ### FetchType y Cascade
@@ -321,159 +669,133 @@ private HistoriaClinica historiaClinica;
 ## Resumen de Annotations
 
 
-**- @Entity**: Marca una clase como una entidad de JPA, lo que significa que estará mapeada a una tabla de la base de datos.
+#### - @Entity:
+
+Marca una clase como una entidad de JPA, lo que significa que estará mapeada a una tabla de la base de datos.
+
+<br/><br/>
+
+#### -  @Table(name = "nombre_de_la_tabla") :
+
+Permite definir el nombre de la tabla de la entidad en la base de datos.
+
+<br/><br/>
 
 
-**- @Table(name = "nombre_de_la_tabla")¨** : Permite definir el nombre de la tabla de la entidad en la base de datos.
+#### - @Id : 
 
-**- @Id** : Especifica el atributo que actúa como clave primaria en la entidad.
+Especifica el atributo que actúa como clave primaria en la entidad.
 
-
-**- @GeneratedValue** : Configura cómo se generará el valor para la clave primaria (estrategias: AUTO, IDENTITY, SEQUENCE, TABLE).
-
-
-**- @Column:** : Define detalles de la columna, como el nombre (name), la longitud máxima (length), si es nullable (permitiendo valores nulos o no), y si es único (unique = true). 
-
-:::info[Ejemplo]
-@Column(name = "nombre", length = 50, nullable = false)
-:::
+<br/><br/>
 
 
-**- @JoinColumn:** Crea la clave foránea en la columna. Si nullable = false, significa que la columna no puede tener valores nulos.
+#### - @GeneratedValue : 
 
-**- @OneToOne:** Relación de uno a uno entre dos entidades. Ejemplo: un Empleado tiene un solo Pasaporte.
-
-**- @ManyToOne:** Relación de muchos a uno, donde varias entidades están relacionadas con una sola entidad. Ejemplo: muchos Empleados están relacionados con un Departamento.
-
-**- @OneToMany:** Relación inversa de ManyToOne. Ejemplo: un Departamento tiene muchos Empleados.
-
-**- @ManyToMany:** Relación de muchos a muchos, donde varias entidades A se relacionan con varias entidades B. Ejemplo: varios Estudiantes pueden estar en varios Cursos.
+Configura cómo se generará el valor para la clave primaria (estrategias: AUTO, IDENTITY, SEQUENCE, TABLE).
 
 
 <br/><br/>
 
-## Configuraciones iniciales
+-----
 
-1. Crearemos el package "model" y dentro crearemos la clase correspondiente a nuestra entidad.
-2. Colocaremos la annotation @Entity para que Spring boot identifique esta clase como tal.
-3. Colocaremos las annotation de la libtería *lombok* que nos permiten simplificar código.
-    - @Data : Permite acceder a los setters y getters.
-    - @AllArgsConstructor : Permite acceder a un constructor con todos los parámetros.
-    - @NoArgsConstructor: : Permite acceder a un constructor sin parámetros.
-    - @ToString : Permite acceder al método ToString
+### - *@Column:  Define detalles de la columna*
 
-```jsx title="Model"
+**columnDefinition**: ermite definir manualmente el tipo de columna en SQL.
+
+Ejemplo: columnDefinition = "DATE"
+
+<br/>
+
+
+**name**: Define el nombre de la columna en la tabla.
+
+Ejemplo: name = "start_date"
+
+<br/>
+
+**nullable** : Indica si la columna puede aceptar valores nulos.	
+
+Ejemplo: nullable = false
+
+<br/>
+
+**unique**: Indica si la columna debe tener valores únicos.	
+
+Ejemplo: unique = true
+
+<br/>
+
+**length:** Especifica la longitud máxima de la columna (solo para tipos String)
+
+Ejemplo: length = 255
+
+<br/>
+
+**precision**: Define la precisión para columnas de tipo decimal (número total de dígitos).
+
+Ejemplo: precision = 10
+
+<br/>
+
+**insertable**: Indica si el valor puede ser insertado (por defecto true).
+
+Ejemplo: insertable = false
+
+<br/>
+
+**updatable**: Indica si el valor puede ser actualizado (por defecto true).
+
+Ejemplo: updatable = false
+
+<br/><br/>
+
+### - *@JoinColumn:  Se usa para especificar claves foráneas en relaciones entre entidades.*
+
+**name**: Define el nombre de la columna que actúa como clave foránea
+
+Ejemplo: name = "club_id"
+
+<br/><br/>
+
+### - *@JoinTable:  Se usa para configurar tablas intermedias en relaciones @ManyToMany.*
+
+**name**: Nombre de la tabla intermedia.
+
+Ejemplo: name = name = "club_competitions"
+
+<br/>
+
+**joinColumns**: Define las columnas que actúan como claves foráneas hacia la entidad actual.
+
+Ejemplo: joinColumns = @JoinColumn(name = "club_id")
+
+<br/>
+
+**inverseJoinColumns**: Define las columnas que actúan como claves foráneas hacia la entidad relacionada.
+
+Ejemplo: inverseJoinColumns = @JoinColumn(name = "competition_id")
+
+
+##### Ejemplo completo
+
+```jsx title="class club"
 @Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+public class Club {
 
-public class Curso {
-    
-    // Atributos....
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
 
+    @OneToOne(targetEntity = Coach.class, cascade = CascadeType.ALL)
+    private Coach coach;
+
+    @OneToMany(targetEntity = Player.class, fetch = FetchType.LAZY)
+    private List<Player> players;
+
+
+    @ManyToOne(targetEntity = FootballCompetition.Class, fetch = FetchType.LAZY)
+    @JoinTable(name = "club_competitions", JoinColumn = @JoinColumn(name = "club"), inverseJoinColumns = @JoinColumn(name= "competition"))
+    private List <FootballCompetition>  FootballCompetition
 }
-
 ```
-
-4. Colocaremos el primer atributo, nombrado como *id_curso*, que corresponderá a nuestra Primary Key en nuestra Base de datos. Para eso usaremos la annotation @Id. Luego, deberemos establecer que estrategia usar para ese identificador único. En este caso, será Identity.
-
-```jsx title="Model"
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-
-public class Curso {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_curso;
-```
-
-5. Continuaremos con el resto de los atributos, y la annotation que necesitemos. En este caso se agregará la annotation @NonNull que asegura que esos campos no sean nulos.**Está verificación será en tiempo de ejecución y no en el almacenamiento en la base de datos.**
-```jsx title="Model"
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-
-public class Curso {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_curso;
-
-    @NonNull
-    @Column(unique = true)
-    private String nombre;
-
-    @NonNull
-    private String modalidad;
-
-    @NonNull
-    private Date fecha_finalizacion;
-```
-
-6. Por último, en el caso que contemos con una composición, e implique una relación entre tablas en la base de datos, debemos realizar el mapeo corresponde con la annotation @OneToMany
-
-Esto indicará que un elemento de nuestra clase *Curso*, en nuestro caso será la Lista de Temas, podrá relacionarse con muchos elementros de la clase *Tema*
-
-
-```jsx title="Model"
-@Entity
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
-
-public class Curso {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_curso;
-
-    @NonNull
-    @Column(unique = true)
-    private String nombre;
-
-    @NonNull
-    private String modalidad;
-
-    @NonNull
-    private Date fecha_finalizacion;
-
-
-    @OneToMany // <---- Foreing Key
-    private List<Tema> listaDeTemas;
-}
-```
-
-
-🤔 Ahora como se verá reflejado esto en nuestra base de datos?
-
-Se creará una tabla intermedia, que identifique a nuestra FK [listaDeTemas] con la PK de la clase Tema
-
-![bd](/img/bd.png)
-
-
-:::info[Importante]
-Esta última relación es Unidireccional, es decir que, la clase Curso tiene una lista de temas, pero la clase Tema no tiene ninguna referencia de vuelta a Curso.
-
-En caso de querer una relación Bidireccional deberia realizarse esta configuración
-```jsx title="Curso"
-@OneToMany
-   @OneToMany(mappedBy = "curso") // "curso" es el nombre del atributo en Tema
-    private List<Tema> listaDeTemas;
-```
-```jsx title="Tema"
-@ManyToOne
-    @JoinColumn(name = "id_curso") // Define la foreign key
-    private Curso curso; // Este es el atributo que 'mappedBy' está referenciando
-```
-- En la clase Curso, la lista listaDeTemas tiene la anotación @OneToMany(mappedBy = "curso").
-- Esto significa que la relación está mapeada por el atributo curso en la clase Tema, que es la referencia al curso al que pertenece cada tema.
-
-Es decir, mappedBy = "curso" se refiere al nombre del atributo curso en la clase Tema. No hace referencia al nombre de la clase Curso en sí.
-
-:::

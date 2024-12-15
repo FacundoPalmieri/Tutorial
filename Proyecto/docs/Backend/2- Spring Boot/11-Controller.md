@@ -270,7 +270,8 @@ Se genera una response devolviendo un MAP, armado en la capa service, junto con 
 *200 OK:* Indica que la solicitud fue exitosa y se devolvieron los datos solicitados. Es el código de estado más común en respuestas exitosas.
 
 *201 Created:* Se utiliza cuando un recurso se ha creado exitosamente, como después de una solicitud POST para crear un nuevo registro.
-<br/><br/>
+
+*204 No Content* Se utiliza para eliminaciones exitosas que no hay contenido adicional en la respuesta.
 
 **- Erroes del Cliente**
 

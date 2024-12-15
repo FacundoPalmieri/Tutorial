@@ -340,7 +340,7 @@ Estas son algunas de las anotaciones estándar de validación que ofrece Bean Va
 
 **@NotNull:** Asegura que el valor no sea null.
 
-**@NotEmpty:** Verifica que una colección o cadena no esté vacía.
+**@NotEmpty:** Verifica que una colección o cadena de texto no esté vacía. 
 
 **@NotBlank:** Verifica que una cadena no esté vacía y no sea solo espacios.
 

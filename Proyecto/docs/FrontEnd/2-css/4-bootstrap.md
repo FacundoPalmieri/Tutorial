@@ -150,6 +150,26 @@ li:last-child {
 
 Es una metodología para nombrar y organizar las clases de CSS de manera más estructurada y modular. Ayuda a crear código más fácil de mantener y entender, especialmente en proyectos grandes. 
 
+### *Metodología de Nombrado*
+
+#### Ejemplos: 
+
+**- camelCase:** Es un estilo de escritura donde la primera palabra comienza en minúscula y cada palabra subsiguiente inicia con mayúscula, sin espacios.
+
+Ejemplo: productosDestacados.
+
+<br/>
+
+**- kebab-case:** Es un estilo donde las palabras se separan con guiones (-) y todas las letras están en minúscula
+
+Ejemplo: productos-destacados.
+
+<br/>
+
+**- snake-case:** Es un estilo donde las palabras se separan con guiones bajos (_) y todas las letras están en minúscula.
+
+Ejemplo: productos_destacados.
+
 
 ### *Estructura de BEM*
 
